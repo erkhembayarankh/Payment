@@ -12,6 +12,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,22 +44,29 @@ class PaymentMainActivity : AppCompatActivity() {
                 R.drawable.khanbank,
                 R.drawable.sp
             )
-            val state = rememberLazyListState()
+            var selectedIndex = remember {
+                mutableStateOf(0)
+            }
             Column(
-                Modifier.fillMaxSize().background(Color.LightGray),
+                Modifier
+                    .fillMaxSize()
+                    .background(Color(0xFFE5E5E5)),
             ) {
-                    Text(
-                        text = "Төлбөрийн нөхцөл",
-                        Modifier
-                            .padding(horizontal = 20.dp, vertical = 8.dp),
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.W700,
-                        color = Color.Blue,
-                        )
-                    ListPaymentType(
-                        paymentTypeList = list,
-                        painter = painterList
-                    )
+                Text(
+                    text = "Төлбөрийн нөхцөл",
+                    Modifier
+                        .padding(horizontal = 20.dp, vertical = 8.dp),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.W700,
+                    color = Color(0xFF003399),
+                )
+                ListPaymentType(
+                    paymentTypeList = list,
+                    painter = painterList,
+                    selected = selectedIndex.value,
+                ) {
+                    selectedIndex.value = it
+                }
 
             }
 
@@ -68,7 +77,8 @@ class PaymentMainActivity : AppCompatActivity() {
     fun ListPaymentType(
         paymentTypeList: List<String>,
         painter: List<Int>,
-        onClick: () -> Unit = {}
+        selected: Int,
+        onClick: (Int) -> Unit,
     ) {
         LazyColumn(
             contentPadding = PaddingValues(horizontal = 10.dp, vertical = 8.dp),
@@ -76,15 +86,23 @@ class PaymentMainActivity : AppCompatActivity() {
             items(
                 paymentTypeList.size
             ) {
+                val activeBorder = if (it == selected) Color(0xFF003399) else Color(0xFFDFDFDF)
+                val borderWidth = if (it == selected) 2.dp else 1.dp
                 BankCard(
                     Modifier
                         .wrapContentHeight()
                         .fillMaxWidth()
                         .padding(vertical = 5.dp, horizontal = 10.dp)
                         .background(Color.White, shape = RoundedCornerShape(10.dp))
-                        .clickable { onClick() },
+                        .border(
+                            border = BorderStroke(borderWidth, activeBorder),
+                            shape = RoundedCornerShape(10.dp)
+                        )
+                        .padding(5.dp)
+                        .clickable { onClick(it) },
                     painter = painterResource(id = painter[it]),
-                    paymentTypeList[it]
+                    paymentTypeList[it],
+                    type = "Картаар"
                 )
             }
         }
@@ -94,19 +112,22 @@ class PaymentMainActivity : AppCompatActivity() {
     fun BankCard(
         modifier: Modifier = Modifier, painter: Painter,
         description: String = "",
+        type: String = ""
     ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = modifier
-            ) {
-                Image(
-                    painter = painter,
-                    contentDescription = "",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(50.dp)
-                        .padding(10.dp)
-                )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = modifier
+        ) {
+            Image(
+                painter = painter,
+                contentDescription = "",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(50.dp)
+                    .padding(10.dp)
+            )
+            Column {
+                Text(text = type, fontSize = 9.sp, color = Color.LightGray)
                 Text(
                     text = description,
                     fontSize = 16.sp,
@@ -114,6 +135,8 @@ class PaymentMainActivity : AppCompatActivity() {
                     color = Color.Black
                 )
             }
+
+        }
     }
 
 }
