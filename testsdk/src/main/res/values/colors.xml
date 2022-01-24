@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="transparent">#00000000</color>
+    <color name="primaryBG">#F1F1F1</color>
+    <color name="secondaryBG">#FFFFFF</color>
+    <color name="primaryButtonBG">#003399</color>
+    <color name="primaryButtonFont">#FFFFFF</color>
+    <color name="primary">#003399</color>
+    <color name="primaryFont">#333333</color>
+    <color name="secondaryButtonBG">#F6F8F8</color>
+    <color name="secondaryButtonFont">#FFFFFF</color>
+    <color name="secondaryFont">#999999</color>
+    <color name="tabBar">#003399</color>
+    <color name="tertiaryButtonBG">#F1F1F1</color>
+    <color name="tertiaryFont">#FFFFFF</color>
+    <color name="buttonFont">#F7F7FC</color>
 </resources>

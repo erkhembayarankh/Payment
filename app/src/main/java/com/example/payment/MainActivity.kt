@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.ComponentActivity
 import com.example.payment.databinding.ActivityMainBinding
-import com.example.testsdk.PaymentMainActivity
+import com.example.testsdk.main.PaymentMainActivity
 
 
 

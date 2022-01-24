@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="xSmallFont">11sp</dimen>
+    <dimen name="smallFont">13sp</dimen>
+    <dimen name="mediumFont">15sp</dimen>
+    <dimen name="largeFont">17sp</dimen>
+    <dimen name="xLargeFont">19sp</dimen>
+    <dimen name="xxLargeFont">21sp</dimen>
+    <dimen name="titleFont">19sp</dimen>
+    <dimen name="margin">10dp</dimen>
+    <dimen name="doubleMargin">20dp</dimen>
+    <dimen name="marginHeader">30dp</dimen>
+    <dimen name="webTitleFont">36sp</dimen>
+</resources>

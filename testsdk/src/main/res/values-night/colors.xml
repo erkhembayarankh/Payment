@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="transparent">#00000000</color>
+    <color name="primaryBG">#224257</color>
+    <color name="secondaryBG">#0F3047</color>
+    <color name="primaryButtonBG">#224257</color>
+    <color name="primaryButtonFont">#FFFFFF</color>
+    <color name="primary">#244459</color>
+    <color name="primaryFont">#CCCCCC</color>
+    <color name="secondaryButtonBG">#224257</color>
+    <color name="secondaryButtonFont">#000000</color>
+    <color name="secondaryFont">#808080</color>
+    <color name="tabBar">#FFFFFF</color>
+    <color name="tertiaryButtonBG">#F1F1F1</color>
+    <color name="tertiaryFont">#FFFFFF</color>
+    <color name="buttonFont">#F7F7FC</color>
+</resources>

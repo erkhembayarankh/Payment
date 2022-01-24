@@ -4,8 +4,13 @@
 
     <application>
         <activity
-            android:name=".PaymentMainActivity"
+            android:name=".finish.FinalActivity"
+            android:theme="@style/Theme.PaymentSDK"
             android:exported="false" />
+        <activity
+            android:name=".main.PaymentMainActivity"
+            android:exported="false"
+            android:theme="@style/Theme.PaymentSDK" />
     </application>
 
 </manifest>

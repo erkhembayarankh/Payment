@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- TabLayout -->
+    <style name="navigationStyle" parent="Widget.MaterialComponents.BottomAppBar.Colored">
+        <item name="backgroundTint">@color/primaryBG</item>
+        <item name="itemTextColor">@color/tabBar</item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.BottomNavigationView</item>
+    </style>
+
+    <style name="ThemeOverlay.App.BottomNavigationView" parent="">
+        <item name="colorPrimary">@color/tabBar</item>
+        <item name="colorOnPrimary">@color/tabBar</item>
+    </style>
+
+    <style name="titleTextStyle" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/titleFont</item>
+        <item name="android:textColor">@color/primaryFont</item>
+    </style>
+
+    <style name="PrimaryButtonStyle" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">@color/primaryButtonFont</item>
+        <item name="backgroundTint">@color/primaryButtonBG</item>
+        <item name="shapeAppearanceOverlay">@style/MyShapeAppearance</item>
+    </style>
+
+    <style name="MyShapeAppearance">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">5dp</item>
+    </style>
+
+<!--    <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">-->
+<!--        <item name="android:background">@drawable/bg_rounded_bottom_sheet</item>-->
+<!--    </style>-->
+
+<!--    <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">-->
+<!--        <item name="bottomSheetStyle">@style/AppModalStyle</item>-->
+<!--    </style>-->
+
+
+    <style name="ShapeAppearance.App.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">15dp</item>
+    </style>
+
+    <!-- TextFields -->
+    <style name="textInputStyle" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
+        <item name="shapeAppearance">@style/ShapeAppearance.App.SmallComponent</item>
+        <item name="hintTextColor">@color/primaryFont</item>
+        <item name="android:textColorHint">@color/primaryFont</item>
+        <item name="boxStrokeColor">@color/transparent</item>
+        <item name="boxStrokeWidth">0dp</item>
+        <item name="boxBackgroundColor">@color/secondaryBG</item>
+        <item name="boxStrokeWidthFocused">0dp</item>
+        <item name="colorControlActivated">@color/primaryFont</item>
+    </style>
+
+    <style name="editTextStyle">
+        <item name="android:textColor">@color/primaryFont</item>
+        <item name="hintTextColor">@color/primaryFont</item>
+        <item name="android:textSize">@dimen/mediumFont</item>
+        <item name="android:textColorHint">@color/primaryFont</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <!-- Button Disabled -->
+    <style name="buttonDisabledStyle" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">#dddddd</item>
+        <item name="shapeAppearanceOverlay">@style/MyShapeAppearance</item>
+        <item name="android:textColor">@color/buttonFont</item>
+        <item name="android:textSize">@dimen/mediumFont</item>
+        <item name="textAllCaps">false</item>
+    </style>
+</resources>
