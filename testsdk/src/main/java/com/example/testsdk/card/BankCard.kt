@@ -13,21 +13,24 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberImagePainter
 
 @Composable
 fun BankCard(
-    modifier: Modifier = Modifier, painter: Painter,
+    modifier: Modifier = Modifier, imageUrl: String,
     description: String = "",
     type: String = ""
 ) {
+
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
     ) {
         Image(
-            painter = painter,
+            painter = rememberImagePainter(imageUrl),
             contentDescription = "",
-            contentScale = ContentScale.Crop,
+//            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(50.dp)
                 .padding(10.dp)

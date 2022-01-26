@@ -3,7 +3,6 @@ package com.example.testsdk.main.fragment
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,7 +31,6 @@ import com.example.testsdk.R
 import com.example.testsdk.base.fragment.BaseFragment
 import com.example.testsdk.finish.FinalActivity
 import com.example.testsdk.main.viewmodel.PaymentViewModel
-import com.example.testsdk.network.UIState
 import com.example.testsdk.paymentList.ListPaymentType
 
 class PaymentFragment : BaseFragment() {
@@ -43,6 +41,7 @@ class PaymentFragment : BaseFragment() {
         super.onAttach(context)
         viewModel.fetchOptions()
     }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -50,30 +49,8 @@ class PaymentFragment : BaseFragment() {
     ): View {
 
         return ComposeView(requireContext()).apply {
-            setContent {
-                viewModel.optionsState.observe(viewLifecycleOwner, {
-                    when (it) {
-                        is UIState.Success -> {
-                            Log.d("hey",it.toString())
-                        }
-                        else -> {}
-                    }
-                })
-                val list = mutableListOf(
-                    "Худалдаа хөгжлийн банк",
-                    "Голомт банк",
-                    "Qpay",
-                    "Хаан банк",
-                    "Social Pay",
-                )
-                val painterList = mutableListOf(
-                    R.drawable.tdbm,
-                    R.drawable.golomt,
-                    R.drawable.qpay,
-                    R.drawable.khanbank,
-                    R.drawable.sp,
-                )
 
+            setContent {
                 Scaffold(
                     topBar = {
                         TopAppBar(backgroundColor = colorResource(id = R.color.primaryBG)) {
@@ -100,7 +77,7 @@ class PaymentFragment : BaseFragment() {
                         )
                     }
                 ) {
-                    MainBody(banksList = list, painterList = painterList)
+                    MainBody(viewModel = viewModel)
                 }
 
             }
@@ -110,7 +87,9 @@ class PaymentFragment : BaseFragment() {
 
 
     @Composable
-    fun MainBody(banksList: List<String>, painterList: List<Int>) {
+    fun MainBody(
+        viewModel: PaymentViewModel
+    ) {
         val selectedIndex = remember {
             mutableStateOf(-1)
         }
@@ -128,8 +107,7 @@ class PaymentFragment : BaseFragment() {
                 color = colorResource(id = R.color.primary)
             )
             ListPaymentType(
-                paymentTypeList = banksList,
-                painter = painterList,
+                viewModel = viewModel,
                 selected = selectedIndex.value,
             ) {
                 selectedIndex.value = it
