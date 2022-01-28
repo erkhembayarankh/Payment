@@ -13,14 +13,17 @@ class FinalViewModel : ViewModel() {
 
     val invoiceState: MutableState<UIState<InvoiceResponse.InvoiceData?>?> = mutableStateOf(null)
     var paymentType: String = ""
+    val finalLoadingState = mutableStateOf(true)
 
     fun fetchPayment(invoiceId: String, method: String) = viewModelScope.launch {
         Network.fetchInvoices(
             invoiceId,
             method = method,
             success = {
+                finalLoadingState.value = false
                 invoiceState.value = UIState.Success(it)
             }, failure = {
+                finalLoadingState.value = false
                 UIState.Failure("FAILED !")
             })
     }

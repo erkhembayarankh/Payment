@@ -3,7 +3,6 @@ package com.example.testsdk.main.fragment
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,10 +31,12 @@ import com.example.testsdk.Footer
 import com.example.testsdk.R
 import com.example.testsdk.base.fragment.BaseFragment
 import com.example.testsdk.finish.FinalActivity
-import com.example.testsdk.finish.fragment.FinalFragment
 import com.example.testsdk.main.viewmodel.PaymentViewModel
-import com.example.testsdk.network.Network
+import com.example.testsdk.network.Options.OptionsResponse
+import com.example.testsdk.network.UIState
 import com.example.testsdk.paymentList.ListPaymentType
+import com.example.testsdk.utils.Loader
+import com.example.testsdk.utils.showAlert
 
 class PaymentFragment : BaseFragment() {
 
@@ -57,6 +58,11 @@ class PaymentFragment : BaseFragment() {
                 val selectedIndex = remember {
                     mutableStateOf(-1)
                 }
+                val isShowDialog = remember {
+                    mutableStateOf(false)
+                }
+                val options = viewModel.optionsState.value
+
                 Scaffold(
                     topBar = {
                         TopAppBar(backgroundColor = colorResource(id = R.color.primaryBG)) {
@@ -81,16 +87,40 @@ class PaymentFragment : BaseFragment() {
                             onClick = {
                                 if (selectedIndex.value != -1) {
                                     val intent = Intent(activity, FinalActivity::class.java)
-                                    val slug =
-                                        viewModel.optionsState.value?.options?.get(selectedIndex.value)?.slug
-                                    intent.putExtra(FinalActivity.PAYMENT_TYPE, slug)
-                                    startActivity(intent)
+                                    when (options) {
+                                        is UIState.Success -> {
+                                            val slug =
+                                                options.data?.options?.get(selectedIndex.value)?.slug
+                                            intent.putExtra(FinalActivity.PAYMENT_TYPE, slug)
+                                            startActivity(intent)
+                                        }
+                                        else -> {}
+                                    }
+
+                                } else {
+                                    isShowDialog.value = true
                                 }
                             }
                         )
                     }
                 ) {
-                    MainBody(viewModel = viewModel, selectedIndex = selectedIndex)
+                    Loader(state = viewModel.loadingState.value)
+                    when (options) {
+                        is UIState.Success -> {
+                            options.data?.let { it ->
+                                MainBody(
+                                    options = it,
+                                    selectedIndex = selectedIndex
+                                )
+                                showAlert(value = isShowDialog.value) {
+                                    isShowDialog.value = false
+                                }
+                            }
+                        }
+                        else -> {
+
+                        }
+                    }
                 }
 
             }
@@ -101,7 +131,7 @@ class PaymentFragment : BaseFragment() {
 
     @Composable
     fun MainBody(
-        viewModel: PaymentViewModel,
+        options: OptionsResponse.Options,
         selectedIndex: MutableState<Int>
     ) {
 
@@ -119,7 +149,7 @@ class PaymentFragment : BaseFragment() {
                 color = colorResource(id = R.color.primary)
             )
             ListPaymentType(
-                viewModel = viewModel,
+                options = options,
                 selected = selectedIndex.value,
             ) {
                 selectedIndex.value = it

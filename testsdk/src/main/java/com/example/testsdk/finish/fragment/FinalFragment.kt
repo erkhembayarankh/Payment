@@ -1,5 +1,6 @@
 package com.example.testsdk.finish.fragment
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -8,35 +9,34 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.browser.customtabs.CustomTabsIntent
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Scaffold
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.activityViewModels
 import coil.compose.rememberImagePainter
 import com.example.testsdk.R
 import com.example.testsdk.base.fragment.BaseFragment
 import com.example.testsdk.finish.viewmodel.FinalViewModel
-import com.example.testsdk.main.viewmodel.PaymentViewModel
 import com.example.testsdk.network.Network
+import com.example.testsdk.network.UIState
+import com.example.testsdk.utils.LazyGridFor
+import com.example.testsdk.utils.Loader
 import java.util.*
-import kotlin.concurrent.schedule
 
 
 class FinalFragment : BaseFragment() {
@@ -52,11 +52,16 @@ class FinalFragment : BaseFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         return ComposeView(requireContext()).apply {
             setContent {
                 val invoice = viewModel.invoiceState.value
+                val isShowWebView = remember {
+                    mutableStateOf(false)
+                }
 
+                val selectedBank = remember {
+                    mutableStateOf("")
+                }
                 Scaffold(
                     topBar = {
                         TopAppBar(backgroundColor = colorResource(id = R.color.primaryBG)) {
@@ -68,54 +73,120 @@ class FinalFragment : BaseFragment() {
                         }
                     }
                 ) {
-//                    LazyGridFor(items = invoice?.deeplinks ?: emptyList(), rowSize = 3) {
-//                        Image(
-//                            painter = rememberImagePainter(it.logo.toString()),
-//                            contentDescription = null,
-//                            modifier = Modifier
-//                                .size(90.dp)
-//                                .padding(10.dp)
-//                                .shadow(8.dp)
-//                                .clickable {
-//                                    startActivity(
-//                                        Intent(Intent.ACTION_VIEW).apply {
-//                                            data = Uri.parse("https://www.google.com")
-//                                        }
-//                                    )
-//                                }
-//                        )
-//                    }
+                    Loader(viewModel.finalLoadingState.value)
+                    when (invoice) {
+                        is UIState.Success -> {
+                            if (invoice.data?.deeplinks?.isEmpty() == false) {
+                                LazyGridFor(
+                                    items = invoice.data?.deeplinks ?: emptyList(),
+                                    rowSize = 3,
+                                ) {
+                                    Image(
+                                        painter = rememberImagePainter(it.logo.toString()),
+                                        contentDescription = null,
+                                        modifier = Modifier
+                                            .size(90.dp)
+                                            .padding(10.dp)
+                                            .shadow(8.dp)
+                                            .clickable {
+                                                selectedBank.value = it.link.toString()
+                                                isShowWebView.value = true
+                                            }
+                                    )
+                                }
+                                WebPageScreen(
+                                    urlToRender = selectedBank.value,
+                                    isShow = isShowWebView.value
+                                )
+                            } else {
+                                isShowWebView.value = true
+                                WebPageScreen(
+                                    urlToRender = invoice.data?.redirectUrl ?: "",
+                                    isShow = isShowWebView.value
+                                )
+                            }
+                        }
+                        UIState.Loading -> {
+                            Log.d("LOADIGN", "LOADING")
+                        }
+                        else -> {}
+                    }
+
                 }
             }
         }
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Composable
-    fun <T> LazyGridFor(
-        items: List<T>,
-        rowSize: Int = 1,
-        itemContent: @Composable BoxScope.(T) -> Unit,
-    ) {
-        LazyColumn(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxSize()
-                .background(colorResource(id = R.color.primaryBG))
-        ) {
-            items(items.chunked(rowSize)) { row ->
-                Row(Modifier.fillParentMaxWidth()) {
-                    for ((index, item) in row.withIndex()) {
-                        Box(
-                            Modifier
-                                .fillMaxWidth(1f / (rowSize - index))
-                                .padding(horizontal = 20.dp, vertical = 10.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            itemContent(item)
+    fun WebPageScreen(urlToRender: String, isShow: Boolean) {
+        if (isShow) {
+            AndroidView(factory = {
+                WebView(it).apply {
+                    layoutParams = ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                    )
+                    webViewClient = WebViewClient()
+                    settings.domStorageEnabled = true
+                    settings.javaScriptEnabled = true
+                    webViewClient = object : WebViewClient() {
+                        override fun shouldOverrideUrlLoading(
+                            view: WebView?,
+                            url: String?
+                        ): Boolean {
+                            val parsedUri = Uri.parse(url)
+//                        if (parsedUri.scheme == "steppearena" && parsedUri.host == "tickets") {
+//                            val intent = Intent()
+//                            getBaseActivity().setResult(Activity.RESULT_OK, intent)
+//                            getBaseActivity().finish()
+//                        }
+                            if (parsedUri.scheme == "https" || parsedUri.scheme == "http") {
+                                return false
+                            }
+                            return try {
+                                startActivity(
+                                    Intent(Intent.ACTION_VIEW).apply {
+                                        data = Uri.parse(url.orEmpty())
+                                    }
+                                )
+                                true
+                            } catch (exception: Exception) {
+                                val payBank: LinkedHashMap<String, String> = LinkedHashMap()
+                                payBank["khanbank"] = "com.khanbank.retail"
+                                payBank["statebank"] = "mn.statebank.mobilebank"
+                                payBank["xacbank"] = "com.xacbank.mobile"
+                                payBank["tdbbank"] = "mn.tdb.pay"
+                                payBank["most"] = "mn.grapecity.mostmoney"
+                                payBank["nibank"] = "mn.nibank.mobilebank"
+                                payBank["ckbank"] = "mn.ckbank.smartbank2"
+                                payBank["capitronbank"] = "mn.ecapitron"
+                                payBank["bogdbank"] = "com.bogdbank.ebank.v2"
+                                payBank["qpaywallet"] = "mn.qpay.wallet"
+                                payBank["mn.moco.candy"] = "mn.mobicom.candy"
+                                if (payBank.containsKey(parsedUri.scheme)) {
+                                    startActivity(
+                                        Intent(
+                                            Intent.ACTION_VIEW,
+                                            Uri.parse(
+                                                "https://play.google.com/store/apps/details?id=${
+                                                    payBank.get(key = parsedUri.scheme)
+                                                }"
+                                            )
+                                        )
+                                    )
+                                }
+                                true
+                            }
                         }
                     }
+                    loadUrl(urlToRender)
                 }
-            }
+            }, update = {
+                it.loadUrl(urlToRender)
+            })
         }
     }
 }
+
+

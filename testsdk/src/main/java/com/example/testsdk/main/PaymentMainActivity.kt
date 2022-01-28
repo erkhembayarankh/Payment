@@ -1,7 +1,6 @@
 package com.example.testsdk.main
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.testsdk.R
 import com.example.testsdk.network.Network

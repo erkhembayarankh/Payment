@@ -13,13 +13,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.testsdk.main.viewmodel.PaymentViewModel
+import com.example.testsdk.network.Options.OptionsResponse
+import com.example.testsdk.network.UIState
 
 
 @Composable
 fun ListPaymentType(
     selected: Int,
-    viewModel: PaymentViewModel,
+    options:  OptionsResponse.Options,
     onClick: (Int) -> Unit,
 ) {
     LazyColumn(
@@ -27,11 +28,9 @@ fun ListPaymentType(
         modifier = Modifier.padding(bottom = 120.dp)
     ) {
         items(
-            viewModel.optionsState.value?.options?.size ?: 0
+            options.options.size
         ) {
-            val options = viewModel.optionsState.value
-            val loading = viewModel.loading.value
-            if (!loading && options != null) {
+            val bankOptions = options.options
                 val activeBorder = if (it == selected) Color(0xFF003399) else Color(0xFFDFDFDF)
                 val borderWidth = if (it == selected) 2.dp else 1.dp
                 BankCard(
@@ -46,15 +45,10 @@ fun ListPaymentType(
                         )
                         .padding(5.dp)
                         .clickable { onClick(it) },
-                    imageUrl = options.options[it].imageUrl.orEmpty(),
-                    options.options[it].name.orEmpty(),
+                    imageUrl = bankOptions[it].imageUrl.orEmpty(),
+                    bankOptions[it].name.orEmpty(),
                     type = "Картаар"
                 )
-            } else {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    CircularProgressIndicator()
-                }
-            }
         }
     }
 }
