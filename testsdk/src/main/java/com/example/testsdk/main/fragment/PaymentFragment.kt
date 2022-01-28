@@ -3,6 +3,7 @@ package com.example.testsdk.main.fragment
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +16,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -30,7 +32,9 @@ import com.example.testsdk.Footer
 import com.example.testsdk.R
 import com.example.testsdk.base.fragment.BaseFragment
 import com.example.testsdk.finish.FinalActivity
+import com.example.testsdk.finish.fragment.FinalFragment
 import com.example.testsdk.main.viewmodel.PaymentViewModel
+import com.example.testsdk.network.Network
 import com.example.testsdk.paymentList.ListPaymentType
 
 class PaymentFragment : BaseFragment() {
@@ -49,15 +53,19 @@ class PaymentFragment : BaseFragment() {
     ): View {
 
         return ComposeView(requireContext()).apply {
-
             setContent {
+                val selectedIndex = remember {
+                    mutableStateOf(-1)
+                }
                 Scaffold(
                     topBar = {
                         TopAppBar(backgroundColor = colorResource(id = R.color.primaryBG)) {
                             Image(
                                 painter = painterResource(id = R.drawable.ic_back),
                                 contentDescription = "",
-                                Modifier.clickable { }
+                                Modifier.clickable {
+                                    getBaseActivity().onBackPressed()
+                                }
                             )
                         }
                     },
@@ -71,13 +79,18 @@ class PaymentFragment : BaseFragment() {
                                     shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
                                 ),
                             onClick = {
-                                val intent = Intent(activity, FinalActivity::class.java)
-                                startActivity(intent)
+                                if (selectedIndex.value != -1) {
+                                    val intent = Intent(activity, FinalActivity::class.java)
+                                    val slug =
+                                        viewModel.optionsState.value?.options?.get(selectedIndex.value)?.slug
+                                    intent.putExtra(FinalActivity.PAYMENT_TYPE, slug)
+                                    startActivity(intent)
+                                }
                             }
                         )
                     }
                 ) {
-                    MainBody(viewModel = viewModel)
+                    MainBody(viewModel = viewModel, selectedIndex = selectedIndex)
                 }
 
             }
@@ -88,11 +101,10 @@ class PaymentFragment : BaseFragment() {
 
     @Composable
     fun MainBody(
-        viewModel: PaymentViewModel
+        viewModel: PaymentViewModel,
+        selectedIndex: MutableState<Int>
     ) {
-        val selectedIndex = remember {
-            mutableStateOf(-1)
-        }
+
         Column(
             Modifier
                 .fillMaxSize()

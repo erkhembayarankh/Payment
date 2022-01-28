@@ -16,12 +16,10 @@ class PaymentMainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val invoiceId = intent.getStringExtra(ACCESS_TOKEN).orEmpty()
+        val invoiceId = intent.getStringExtra(INVOICE_ID).orEmpty()
         val token = intent.getStringExtra(ACCESS_TOKEN).orEmpty()
         Network.token = token
         Network.invoiceId = invoiceId
-        Log.d("network token", Network.token)
-        Log.d("invoice id", Network.invoiceId)
         setContentView(R.layout.activity_payment_main)
     }
 }

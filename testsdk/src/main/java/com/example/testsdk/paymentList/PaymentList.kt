@@ -1,7 +1,6 @@
 package com.example.testsdk.paymentList
 
 import BankCard
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -13,12 +12,8 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.fragment.app.activityViewModels
 import com.example.testsdk.main.viewmodel.PaymentViewModel
-import com.example.testsdk.network.Options.OptionsResponse
 
 
 @Composable
@@ -36,7 +31,6 @@ fun ListPaymentType(
         ) {
             val options = viewModel.optionsState.value
             val loading = viewModel.loading.value
-            Log.d("hello", loading.toString())
             if (!loading && options != null) {
                 val activeBorder = if (it == selected) Color(0xFF003399) else Color(0xFFDFDFDF)
                 val borderWidth = if (it == selected) 2.dp else 1.dp

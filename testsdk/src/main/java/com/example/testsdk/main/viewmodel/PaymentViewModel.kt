@@ -1,17 +1,15 @@
 package com.example.testsdk.main.viewmodel
 
-import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.testsdk.network.Invoice.InvoiceResponse
 import com.example.testsdk.network.Network
 import com.example.testsdk.network.Options.OptionsResponse
 import kotlinx.coroutines.launch
 
 class PaymentViewModel : ViewModel() {
-    var totalAmount: Double = 0.0;
-    var invoiceId = ""
     val optionsState: MutableState<OptionsResponse.Options?> = mutableStateOf(null)
     val loading = mutableStateOf(true)
 

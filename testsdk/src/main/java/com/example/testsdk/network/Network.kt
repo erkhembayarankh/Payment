@@ -1,6 +1,7 @@
 package com.example.testsdk.network
 
 import android.util.Log
+import com.example.testsdk.network.Invoice.InvoiceResponse
 import com.example.testsdk.network.Options.OptionsResponse
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -54,6 +55,30 @@ object Network {
                 // Log error here since request failed
             }
         })
+    }
 
+    fun fetchInvoices(
+        of: String,
+        method: String,
+        success: (InvoiceResponse.InvoiceData) -> Unit,
+        failure: (String) -> Unit,
+    ) {
+        val call: Call<InvoiceResponse> = apiService.fetchInvoices(of, method)
+        call.enqueue(object : Callback<InvoiceResponse?> {
+            override fun onResponse(
+                call: Call<InvoiceResponse?>?,
+                response: Response<InvoiceResponse?>,
+            ) {
+                val responseData = response.body()?.data
+                if (responseData != null) {
+                    success(responseData)
+                } else {
+                    failure("empty options")
+                }
+            }
+
+            override fun onFailure(call: Call<InvoiceResponse?>, t: Throwable) {
+            }
+        })
     }
 }
