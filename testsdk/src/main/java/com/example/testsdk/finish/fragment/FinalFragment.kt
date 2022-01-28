@@ -6,9 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.foundation.Image
@@ -130,6 +128,15 @@ class FinalFragment : BaseFragment() {
                     webViewClient = WebViewClient()
                     settings.domStorageEnabled = true
                     settings.javaScriptEnabled = true
+                    this.setOnKeyListener { v, keyCode, event ->
+                        if (keyCode == KeyEvent.KEYCODE_BACK && event.action == MotionEvent.ACTION_UP
+                            && this.canGoBack()
+                        ) {
+                            this.goBack()
+                            return@setOnKeyListener true
+                        }
+                        false
+                    }
                     webViewClient = object : WebViewClient() {
                         override fun shouldOverrideUrlLoading(
                             view: WebView?,
