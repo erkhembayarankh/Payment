@@ -9,4 +9,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Payment"
 include ':app'
-include ':testsdk'
+include ':android-payment-sdk'
