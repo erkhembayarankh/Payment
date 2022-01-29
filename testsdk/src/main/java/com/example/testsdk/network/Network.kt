@@ -52,7 +52,8 @@ object Network {
             }
 
             override fun onFailure(call: Call<OptionsResponse?>?, t: Throwable?) {
-                // Log error here since request failed
+                Log.d("aldaa; ", t.toString())
+                failure(t.toString())
             }
         })
     }

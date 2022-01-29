@@ -3,6 +3,7 @@ package com.example.testsdk.main.fragment
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
@@ -76,32 +78,36 @@ class PaymentFragment : BaseFragment() {
                         }
                     },
                     bottomBar = {
-                        Footer(
-                            modifier = Modifier
-                                .fillMaxWidth(1f)
-                                .height(120.dp)
-                                .background(
-                                    Color.White,
-                                    shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
-                                ),
-                            onClick = {
-                                if (selectedIndex.value != -1) {
-                                    val intent = Intent(activity, FinalActivity::class.java)
-                                    when (options) {
-                                        is UIState.Success -> {
+                        when (options) {
+                            is UIState.Success -> {
+                                Footer(
+                                    modifier = Modifier
+                                        .fillMaxWidth(1f)
+                                        .height(100.dp)
+                                        .background(
+                                            Color.White,
+                                            shape = RoundedCornerShape(
+                                                topStart = 16.dp,
+                                                topEnd = 16.dp
+                                            )
+                                        ),
+                                    onClick = {
+                                        if (selectedIndex.value != -1) {
+                                            val intent = Intent(activity, FinalActivity::class.java)
                                             val slug =
                                                 options.data?.options?.get(selectedIndex.value)?.slug
                                             intent.putExtra(FinalActivity.PAYMENT_TYPE, slug)
                                             startActivity(intent)
-                                        }
-                                        else -> {}
-                                    }
 
-                                } else {
-                                    isShowDialog.value = true
-                                }
+
+                                        } else {
+                                            isShowDialog.value = true
+                                        }
+                                    }
+                                )
                             }
-                        )
+                            else -> {}
+                        }
                     }
                 ) {
                     Loader(state = viewModel.loadingState.value)
@@ -115,6 +121,16 @@ class PaymentFragment : BaseFragment() {
                                 showAlert(value = isShowDialog.value) {
                                     isShowDialog.value = false
                                 }
+                            }
+                        }
+                        is UIState.Failure -> {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(colorResource(id = R.color.primaryBG)),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(text = "Сервертэй холбогдоход алдаа гарлаа")
                             }
                         }
                         else -> {

@@ -1,5 +1,6 @@
 package com.example.testsdk.main.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -21,7 +22,7 @@ class PaymentViewModel : ViewModel() {
             },
             failure = {
                 loadingState.value = false
-                UIState.Failure(it)
+                optionsState.value = UIState.Failure(it)
             }
         )
     }
