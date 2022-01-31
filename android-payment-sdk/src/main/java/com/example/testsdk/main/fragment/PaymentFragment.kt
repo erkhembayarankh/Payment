@@ -3,7 +3,6 @@ package com.example.testsdk.main.fragment
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,7 +37,6 @@ import com.example.testsdk.network.Options.OptionsResponse
 import com.example.testsdk.network.UIState
 import com.example.testsdk.paymentList.ListPaymentType
 import com.example.testsdk.utils.Loader
-import com.example.testsdk.utils.showAlert
 
 class PaymentFragment : BaseFragment() {
 
@@ -59,9 +57,6 @@ class PaymentFragment : BaseFragment() {
             setContent {
                 val selectedIndex = remember {
                     mutableStateOf(-1)
-                }
-                val isShowDialog = remember {
-                    mutableStateOf(false)
                 }
                 val options = viewModel.optionsState.value
 
@@ -101,7 +96,7 @@ class PaymentFragment : BaseFragment() {
 
 
                                         } else {
-                                            isShowDialog.value = true
+                                            getBaseActivity().showErrorDialog("Төлбөрийн хэлбэрээ сонгоно уу")
                                         }
                                     }
                                 )
@@ -118,9 +113,6 @@ class PaymentFragment : BaseFragment() {
                                     options = it,
                                     selectedIndex = selectedIndex
                                 )
-                                showAlert(value = isShowDialog.value) {
-                                    isShowDialog.value = false
-                                }
                             }
                         }
                         is UIState.Failure -> {
