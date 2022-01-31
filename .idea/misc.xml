@@ -5,6 +5,9 @@
       <map>
         <entry key="../../../../layout/compose-model-1642560685641.xml" value="0.7375279499744007" />
         <entry key="../../../../layout/compose-model-1642644002959.xml" value="1.0" />
+        <entry key="android-payment-sdk/src/main/res/layout/activity_final.xml" value="0.15520833333333334" />
+        <entry key="android-payment-sdk/src/main/res/layout/activity_main.xml" value="0.15520833333333334" />
+        <entry key="android-payment-sdk/src/main/res/layout/activity_payment_main.xml" value="0.15520833333333334" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="testsdk/src/main/res/layout/activity_final.xml" value="0.13229166666666667" />
         <entry key="testsdk/src/main/res/layout/activity_main.xml" value="0.19322916666666667" />

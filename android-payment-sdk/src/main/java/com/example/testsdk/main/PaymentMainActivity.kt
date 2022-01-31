@@ -3,10 +3,11 @@ package com.example.testsdk.main
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.testsdk.R
+import com.example.testsdk.base.activity.BaseActivity
 import com.example.testsdk.network.Network
 
 
-class PaymentMainActivity : AppCompatActivity() {
+class PaymentMainActivity : BaseActivity() {
     companion object {
         const val INVOICE_ID = "INVOICEID"
         const val ACCESS_TOKEN = "TOKEN"

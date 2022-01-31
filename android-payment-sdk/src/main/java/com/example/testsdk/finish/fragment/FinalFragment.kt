@@ -143,6 +143,7 @@ class FinalFragment : BaseFragment() {
                             url: String?
                         ): Boolean {
                             val parsedUri = Uri.parse(url)
+                            Log.d("urll", parsedUri.toString())
 //                        if (parsedUri.scheme == "steppearena" && parsedUri.host == "tickets") {
 //                            val intent = Intent()
 //                            getBaseActivity().setResult(Activity.RESULT_OK, intent)
